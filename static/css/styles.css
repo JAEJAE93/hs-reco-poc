@@ -1,0 +1,237 @@
+body {
+    /*font-family: Arial, sans-serif; */
+    font-family: "Noto Sans KR", sans-serif;
+    background-color: #1c1c1e;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 100%;
+    /* max-width: 1200px; */
+    max-width: 90%;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    margin-bottom: 20px;
+}
+
+.logo-menu {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    width: 100px;
+    height: auto;
+    margin-right: 20px;
+}
+
+.menu {
+    display: flex;
+    gap: 15px;
+}
+
+.menu a {
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+}
+
+.menu a:hover,
+.menu a:focus {
+    background-color: #333;
+    outline: none;
+}
+
+.top-banner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #2c2c2e;
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+
+.banner-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+}
+
+.banner-content img {
+    width: 100%;
+    height: 100%;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+.banner-text {
+    flex: 1;
+    text-align: left;
+}
+
+section {
+    margin-bottom: 40px;
+}
+
+.cards-container {
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+.cards-wrapper {
+    overflow: hidden;
+    flex: 1;
+    padding: 5px;
+}
+
+.cards {
+    display: flex;
+    transition: transform 0.3s ease;
+    width: 400%; /* To ensure all cards fit initially */
+}
+
+.card {
+    background-color: #2c2c2e;
+    padding: 20px;
+    border-radius: 8px;
+    width: 25%; /* Each card takes 25% of the container width */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    text-align: left;
+    transition: transform 0.3s ease, width 0.3s ease;
+    margin-right:20px;
+}
+
+.channel-number, .channel-name {
+    margin-bottom: 10px;
+    float: left;
+    font-weight: bold;
+}
+
+.product-image {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.product-details {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+}
+
+.product-details-image {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+
+.product-name, .product-price {
+    text-align: left;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+button.prev, button.next {
+    background-color: transparent;
+    border: none;
+    color: #fff;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+button.prev:focus, button.next:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+}
+
+/* card focus 했을 때 padding을 줘서 줌인 되는 느낌을 줌 */
+.card:focus {
+    outline: none;
+    padding: 5px;
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.8);
+    border-radius: 12px;
+    z-index: 999;
+}
+
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.overlay-content {
+    background: #222;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 80%;
+    max-height: 80%;
+    overflow: auto;
+    z-index: 2000; /* Ensure it's above the translucent background */
+    position: relative;
+}
+
+.video:focus, .option:focus, .banner-content:focus, .logo:focus, .menu a:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+}
+
+.default-image {
+    background: url('path/to/default-image.jpg') center center / cover no-repeat;
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+}
+
+.videos, .options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.video, .option {
+    background-color: #2c2c2e;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    width: calc(33.333% - 40px);
+    height: 200px; /* Adjust height as needed */
+    box-sizing: border-box;
+}
+
+.video img, .option img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+
+
