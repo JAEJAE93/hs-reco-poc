@@ -12,12 +12,12 @@
 <body>
     <div class="container-detail">
         <div class="header-detail">
-            <div class="date-time">방송시간: 06/11(화) 10:25 - 12:35</div>
+            <div class="date-time">방송시간: {{ product.bom_st_dt }} ~ {{ product.bom_fns_dt }}</div>
         </div>
-
+        
         <div class="content-detail">
             <div>
-                <img src={{ product.productImgUrl }} alt="Product Image">
+                <img src={{ product.productImgUrl }} style="width: 600px; height: 600px;" alt="Product Image">
             </div>
 
             <div class="content-text-detail">
@@ -27,7 +27,7 @@
                     <button class="close-button" id="close-button">닫기</button>
                 </div>
                 <div class="qr-section">
-                    <img src="../static/img/qrcode.png" alt="QR Code">
+                    <img src="../static/img/qrcode_img/{{ product.prod_id }}.png" style="width: 300px; height: 300px;" alt="QR Code">
                 </div>
             </div>
         </div>
