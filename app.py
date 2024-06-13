@@ -17,6 +17,9 @@ mod_columns = ['sa_id', 'p_id', 'brad_date', 'ch_svc_id', 'ch_no', 'ch_nm',
 
 cards = user_df[mod_columns].to_dict('records')
 
+# pci 불러와서
+# log 찍기
+
 @app.route('/')
 def index():
     # 홈쇼핑 추천 컨테이너 필요 요소

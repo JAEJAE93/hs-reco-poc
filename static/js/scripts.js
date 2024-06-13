@@ -4,32 +4,37 @@ document.addEventListener('DOMContentLoaded', (event) => {
     const nextButton = document.querySelector('.next');
     const prevButton = document.querySelector('.prev');
     let currentIndex = 0;
+    
     // overlay
     const overlay = document.getElementById('overlay');
     const overlayContent = document.getElementById('overlay-content');
     let lastFocusedElement; // 콘텐츠 클릭 전의 포커스 저장
 
     function moveFocus(currentElement, direction) {
-        const currentIndex = Array.from(focusableElements).indexOf(currentElement);
-        let targetIndex;
         let focusableElementsInContext;
         
         // 오버레이에 포커스가 되면, 방향키 포커스를 오버레이에 맞춤
         if (overlay.style.display === 'flex') {
             focusableElementsInContext = overlayContent.querySelectorAll('button, [tabindex="0"]');
-        } else {
+            console.log('flex focusableElementsInContext: ', focusableElementsInContext)
+        } 
+        else {
             focusableElementsInContext = focusableElements;
+            console.log('not flex focusableElementsInContext: ', focusableElementsInContext)
         }
 
-         // 컬럼 계산
-         const sectionElements = document.querySelectorAll('section');
-         let columns = 1;
-         sectionElements.forEach(section => {
-             const items = section.querySelectorAll('.card, .video, .option').length;
-             if (items > 0) {
-                 columns = Math.max(columns, Math.ceil(items / Math.floor(window.innerWidth / 300)));
-             }
-         });
+        const currentIndex = Array.from(focusableElements).indexOf(currentElement);
+        let targetIndex;
+
+        // 컬럼 계산
+        const sectionElements = document.querySelectorAll('section');
+        let columns = 1;
+        sectionElements.forEach(section => {
+            const items = section.querySelectorAll('.card, .video, .option').length;
+            if (items > 0) {
+                columns = Math.max(columns, Math.ceil(items / Math.floor(window.innerWidth / 300)));
+            }
+        });
 
         // 방향키 입력
         switch (direction) {
@@ -56,12 +61,15 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     // 오버레이 표시
     function showOverlay(url) {
+        console.log('Start overlay')
         lastFocusedElement = document.activeElement; // 마지막 포커스 위치 저장
+        console.log('lastFocusedElement: ', lastFocusedElement)
         fetch(url)
             .then(response => response.text())
             .then(html => {
                 overlayContent.innerHTML = html;
                 overlay.style.display = 'flex';
+                console.log('overlay.style.display: ', overlay.style.display)
 
                 // 이벤트 리스너 추가
                 const overlayFocusableElements = overlayContent.querySelectorAll('button, [tabindex="0"]');
@@ -70,6 +78,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                         const direction = event.key;
                         if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(direction)) {
                             event.preventDefault();
+                            console.log("event.target: ", event.target)
                             moveFocus(event.target, direction);
                         }
                     });
@@ -117,6 +126,28 @@ document.addEventListener('DOMContentLoaded', (event) => {
         });
     });
 
+    function updateSlidePosition() {
+        const cardWidth = document.querySelector('.cards-wrapper').clientWidth / 4;
+        cardsContainer.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
+    }
+
+    // button action start
+    nextButton.addEventListener('click', () => {
+        const cardCount = document.querySelectorAll('.cards .card').length;
+        if (currentIndex < cardCount - 4) {
+            currentIndex++;
+            updateSlidePosition();
+        }
+    });
+
+    prevButton.addEventListener('click', () => {
+        if (currentIndex > 0) {
+            currentIndex--;
+            updateSlidePosition();
+        }
+    });
+    // button action end
+
     // function updateCardsWidth() {
     //     const cardCount = document.querySelectorAll('.cards .card').length;
     //     const cardWidth = document.querySelector('.cards-wrapper').clientWidth / 4; // Display 4 cards at a time
@@ -125,27 +156,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
     //     });
     //     cardsContainer.style.width = `${cardWidth * cardCount}px`;
     // }
-
-
-    // function updateSlidePosition() {
-    //     const cardWidth = document.querySelector('.cards-wrapper').clientWidth / 4;
-    //     cardsContainer.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
-    // }
-
-    // nextButton.addEventListener('click', () => {
-    //     const cardCount = document.querySelectorAll('.cards .card').length;
-    //     if (currentIndex < cardCount - 4) {
-    //         currentIndex++;
-    //         updateSlidePosition();
-    //     }
-    // });
-
-    // prevButton.addEventListener('click', () => {
-    //     if (currentIndex > 0) {
-    //         currentIndex--;
-    //         updateSlidePosition();
-    //     }
-    // });
 
     // window.addEventListener('resize', updateCardsWidth);
     // updateCardsWidth();

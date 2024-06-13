@@ -46,7 +46,7 @@
                 <div class="cards-wrapper">
                     <div class="cards">
                         {% for card in cards %}
-                        <div class="card" tabindex="0">
+                        <div class="card" tabindex="0" data-url='/product/{{ card.prod_id }}'>
                             <div class="channel-number">{{ card.ch_no }}</div>
                             <div class="channel-name">{{ card.ch_nm }}</div>
                             <img src={{ card.productImgUrl }} alt="Product Image" class="product-image">
