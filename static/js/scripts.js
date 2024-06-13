@@ -16,14 +16,12 @@ document.addEventListener('DOMContentLoaded', (event) => {
         // 오버레이에 포커스가 되면, 방향키 포커스를 오버레이에 맞춤
         if (overlay.style.display === 'flex') {
             focusableElementsInContext = overlayContent.querySelectorAll('button, [tabindex="0"]');
-            console.log('flex focusableElementsInContext: ', focusableElementsInContext)
         } 
         else {
             focusableElementsInContext = focusableElements;
-            console.log('not flex focusableElementsInContext: ', focusableElementsInContext)
         }
 
-        const currentIndex = Array.from(focusableElements).indexOf(currentElement);
+        const currentIndex = Array.from(focusableElementsInContext).indexOf(currentElement);
         let targetIndex;
 
         // 컬럼 계산
@@ -54,22 +52,19 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 return;
         }
 
-        if (targetIndex >= 0 && targetIndex < focusableElements.length) {
-            focusableElements[targetIndex].focus();
+        if (targetIndex >= 0 && targetIndex < focusableElementsInContext.length) {
+            focusableElementsInContext[targetIndex].focus();
         }
     }
 
     // 오버레이 표시
     function showOverlay(url) {
-        console.log('Start overlay')
         lastFocusedElement = document.activeElement; // 마지막 포커스 위치 저장
-        console.log('lastFocusedElement: ', lastFocusedElement)
         fetch(url)
             .then(response => response.text())
             .then(html => {
                 overlayContent.innerHTML = html;
                 overlay.style.display = 'flex';
-                console.log('overlay.style.display: ', overlay.style.display)
 
                 // 이벤트 리스너 추가
                 const overlayFocusableElements = overlayContent.querySelectorAll('button, [tabindex="0"]');
@@ -78,7 +73,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
                         const direction = event.key;
                         if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(direction)) {
                             event.preventDefault();
-                            console.log("event.target: ", event.target)
                             moveFocus(event.target, direction);
                         }
                     });
@@ -101,6 +95,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     }
 
     focusableElements.forEach(element => {
+        // 키보드 입력에 따른 moveFocus 호출
         element.addEventListener('keydown', (event) => {
             const direction = event.key;
             if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(direction)) {
@@ -109,13 +104,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
             }
         });
 
-        element.addEventListener('click', function () {
-            const url = element.getAttribute('data-url');
-            if (url) {
-                showOverlay(url);
-            }
-        });
-
+        // keyboard enter 상세 페이지 open
         element.addEventListener('keydown', function (event) {
             if (event.key === 'Enter') {
                 const url = element.getAttribute('data-url');
@@ -124,49 +113,14 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 }
             }
         });
+
+        // // mouse click event 접근
+        // element.addEventListener('click', function () {
+        //     const url = element.getAttribute('data-url');
+        //     if (url) {
+        //         showOverlay(url);
+        //     }
+        // });
+        
     });
-
-    function updateSlidePosition() {
-        const cardWidth = document.querySelector('.cards-wrapper').clientWidth / 4;
-        cardsContainer.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
-    }
-
-    // button action start
-    nextButton.addEventListener('click', () => {
-        const cardCount = document.querySelectorAll('.cards .card').length;
-        if (currentIndex < cardCount - 4) {
-            currentIndex++;
-            updateSlidePosition();
-        }
-    });
-
-    prevButton.addEventListener('click', () => {
-        if (currentIndex > 0) {
-            currentIndex--;
-            updateSlidePosition();
-        }
-    });
-    // button action end
-
-    // function updateCardsWidth() {
-    //     const cardCount = document.querySelectorAll('.cards .card').length;
-    //     const cardWidth = document.querySelector('.cards-wrapper').clientWidth / 4; // Display 4 cards at a time
-    //     document.querySelectorAll('.cards .card').forEach(card => {
-    //         card.style.width = `${cardWidth}px`;
-    //     });
-    //     cardsContainer.style.width = `${cardWidth * cardCount}px`;
-    // }
-
-    // window.addEventListener('resize', updateCardsWidth);
-    // updateCardsWidth();
-
-    // focusableElements.forEach(element => {
-    //     element.addEventListener('keydown', (event) => {
-    //         const direction = event.key;
-    //         if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(direction)) {
-    //             event.preventDefault();
-    //             moveFocus(event.target, direction);
-    //         }
-    //     });
-    // });
 });

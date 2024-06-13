@@ -20,6 +20,9 @@ cards = user_df[mod_columns].to_dict('records')
 # pci 불러와서
 # log 찍기
 
+# 5초마다 pci 불러와서 / p_id 있으면 컨테이너 업데이트
+# 5초마다 컨테이너 업데이트 해보기
+
 @app.route('/')
 def index():
     # 홈쇼핑 추천 컨테이너 필요 요소
