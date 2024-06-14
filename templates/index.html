@@ -31,15 +31,34 @@
         <section class="top-banner">
             <div class="banner-content" tabindex="0">
                 <img src="../static/img/top_banner_img.png" alt="Top Banner" class="default-image">
-                <!-- <div class="banner-text">
-                    <h1>즐거움이 배가 되는 KT알파 쇼핑!</h1>
-                    <p>2024 엘로엘 팡팡 빅 선쿠션 S8 기본구성</p>
-                    <p>혜택가 69,900원</p> 
-                </div> -->
             </div>
         </section>
         <section class="home-shopping-now">
-            <h2>{{ reco_cw }}</h2>
+            <div id='reco_cw'></div> <!--{{ reco_cw }}-->
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    function fetchCwData() {
+                        fetch('/update_data')
+                            .then(response => response.json())
+                            .then(data => {
+                                // 카피라이팅 check
+                                const recoCwElement = document.getElementById('reco_cw');
+                                if (recoCwElement) {
+                                    console.log('data.reco_cw: ', data.reco_cw);
+                                    recoCwElement.innerText = data.reco_cw;
+                                }
+                                else {
+                                    console.error('#reco_cw not found.');
+                                }
+                            })
+                    }
+                    // 초기 데이터 가져오기
+                    fetchCwData();
+                        
+                    // 10초마다 데이터 업데이트
+                    setInterval(fetchCwData, 10000);
+                });    
+            </script>
             <br />
             <div class="cards-container">
                 <button class="prev" aria-label="Previous">&lt;</button>
@@ -51,9 +70,8 @@
                             <div class="channel-name">{{ card.ch_nm }}</div>
                             <img src={{ card.productImgUrl }} alt="Product Image" class="product-image">
                             <div class="product-details">
-                                <!--<img src="path/to/product-details1.jpg" alt="Product Details" class="product-details-image">-->
                                 <div class="product-name">{{ card.bom_prod_nm }}</div>
-                                <div class="product-price">{{ card.price }}원</div> <!--price? origin price?-->
+                                <div class="product-price">{{ card.price }}원</div>
                             </div>
                         </div>
                         {% endfor %}
@@ -113,6 +131,5 @@
             document.getElementById('my-menu').focus();
         });
     </script>
-
 </body>
 </html>
