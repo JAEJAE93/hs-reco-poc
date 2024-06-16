@@ -6,16 +6,18 @@ document.addEventListener('DOMContentLoaded', (event) => {
         fetch('/update_data')
             .then(response => response.json())
             .then(data => {
-                const cardsContainer = document.querySelector('.cards');
-                console.log('cardsContainer: ', cardsContainer)
-                if (cardsContainer) {
+                const cardsElement = document.querySelectorAll('.card');
+                const minLength = Math.min(cardsElement.length, data.cards.length);
+                          
+                if (cardsElement) {
                     // 각 카드 업데이트 또는 새 카드 추가
-                    data.cards.forEach(card => {
-                        let cardElement = document.querySelector('.card');
-                        console.log('cardElement: ', cardElement)
+                    for (let i = 0; i < minLength; i++) {
+                        let cardElement = cardsElement[i];
+                        let card = data.cards[i];
+
                         if (cardElement) {
-                            console.log('update card')
                             // 기존 카드 업데이트
+                            cardElement.dataset.url = `/product/${card.prod_id}`;
                             cardElement.querySelector('.channel-number').innerText = card.ch_no;
                             cardElement.querySelector('.channel-name').innerText = card.ch_nm;
                             cardElement.querySelector('.product-image').src = card.productImgUrl;
@@ -23,7 +25,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
                             cardElement.querySelector('.product-price').innerText = `${card.price}원`;
                         }
                         else {
-                            console.log('generate new card')
                             // 새 카드 추가
                             cardElement = document.createElement('div');
                             cardElement.className = 'card';
@@ -41,7 +42,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                             `;
                             cardsContainer.appendChild(cardElement);
                         }
-                    });
+                    }
 
                     // 새로 추가된 요소에 대해 포커스 및 클릭 이벤트 등록
                     focusableElements = document.querySelectorAll(focusableElementsSelector);

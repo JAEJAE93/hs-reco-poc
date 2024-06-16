@@ -4,7 +4,7 @@ from flask import Flask, render_template, jsonify
 
 app = Flask(__name__)
 
-# read_csv string으로 불러오기 
+# read_csv string으로 불러오기
 dict_dtype = {'ch_no' : str}
 reco_container_df = pd.read_csv('data/merge_df.dat', dtype=dict_dtype)
 
