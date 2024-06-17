@@ -83,6 +83,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
     fetchData();
 
     // 10초마다 데이터 업데이트
+    // pci가 체크인 됐을 때, fetchData 다시 불러오는 함수를 작성해야 됨.
+    
     setInterval(fetchData, 10000);
     
     const nextButton = document.querySelector('.next');

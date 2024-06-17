@@ -26,6 +26,10 @@ reco_cw, cards = get_user_data(users[cur_user_idx])
 
 # pci 불러와서
 # log 찍기
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 # 5초마다 pci 불러와서 / p_id 있으면 컨테이너 업데이트
 # 5초마다 컨테이너 업데이트 해보기
 
@@ -35,7 +39,8 @@ def index():
     # 카피라이팅, 채널번호, 채널이름, 상품 이미지, 상품제목, 상품가격
     return render_template('index.html',
                            reco_cw=reco_cw,
-                           cards=cards
+                           cards=cards,
+                           # p_id_flag = 'p_id'
                            )
     
 @app.route('/product/<int:product_id>')
@@ -53,6 +58,8 @@ def product_detail(product_id):
     return render_template('product_detail.html',
                            product=product)
 
+# 24.06.17 여기를 업데이트 하면 되겠다.
+# p_id 여기서 데이터를 불러와서 웹페이지
 @app.route('/update_data')
 def update_data():
     global cur_user_idx, reco_cw, cards
