@@ -1,0 +1,116 @@
+if (cardsContainer) {
+    cardsContainer.innerHTML = '';
+    data.cards.forEach(card => {
+        const cardElement = document.createElement('div');
+        // cardElement.className = 'card';
+        cardElement.innerHTML = `
+            <h2>${card.bom_prod_nm}</h2>
+            <img src="${card.productImgUrl}" alt="${card.bom_prod_nm}">
+            <p>Price: ${card.price}</p>
+            <a href="/product/${card.prod_id}">Details</a>
+        `;
+        cardsContainer.appendChild(cardElement);
+    });
+}*/
+
+<div class="cards-container">
+    <button class="prev" aria-label="Previous">&lt;</button>
+    <div class="cards-wrapper">
+        <div class="cards">
+            {% for card in cards %}
+            <div class="card" tabindex="0" data-url='/product/{{ card.prod_id }}'>
+                <div class="channel-number">{{ card.ch_no }}</div>
+                <div class="channel-name">{{ card.ch_nm }}</div>
+                <img src={{ card.productImgUrl }} alt="Product Image" class="product-image">
+                <div class="product-details">
+                    <!--<img src="path/to/product-details1.jpg" alt="Product Details" class="product-details-image">-->
+                    <div class="product-name">{{ card.bom_prod_nm }}</div>
+                    <div class="product-price">{{ card.price }}원</div> <!--price? origin price?-->
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+<script>
+    function fetchDataAndRenderCards() {
+        fetch('/update_data')
+            .then(response => response.json())
+            .then(data => {
+                const recoCwElement = document.getElementById('reco_cw');
+                if (recoCwElement) {
+                    recoCwElement.innerText = data.reco_cw;
+                } else {
+                    console.error('#reco_cw not found.');
+                }
+    
+                const cardsContainer = document.querySelector('.cards-container');
+                if (cardsContainer) {
+                    cardsContainer.innerHTML = '';
+                    data.cards.forEach(card => {
+                        const cardElement = document.createElement('div');
+                        cardElement.className = 'card';
+                        cardElement.innerHTML = `
+                            <h2>${card.bom_prod_nm}</h2>
+                            <img src="${card.productImgUrl}" alt="${card.bom_prod_nm}">
+                            <p>Price: ${card.price}</p>
+                            <a href="/product/${card.prod_id}">Details</a>
+                        `;
+                        cardsContainer.appendChild(cardElement);
+    
+                        // 새로 생성된 카드에 클릭 이벤트 리스너 등록
+                        cardElement.addEventListener('click', function() {
+                            cardElement.classList.add('focused'); // 포커스 스타일 적용
+                            const product_id = cardElement.querySelector('a').getAttribute('href').split('/').pop();
+                            window.location.href = `/product/${product_id}`; // 상세 페이지 이동
+                        });
+                    });
+                } else {
+                    console.error('.cards-container not found.');
+                }
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        function fetchData() {
+            fetch('/update_data')
+                .then(response => response.json())
+                .then(data => {
+                    // 카피라이팅 check
+                    const recoCwElement = document.getElementById('reco_cw');
+                    if (recoCwElement) {
+                        console.log('data.reco_cw: ', data.reco_cw);
+                        recoCwElement.innerText = data.reco_cw;
+                    }
+                    else {
+                        console.error('#reco_cw not found.');
+                    }
+                })
+        }
+        // 초기 데이터 가져오기
+        fetchData();
+            
+        // 5초마다 데이터 업데이트
+        setInterval(fetchData, 10000);
+    });    
+</script>

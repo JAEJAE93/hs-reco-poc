@@ -1,6 +1,90 @@
 document.addEventListener('DOMContentLoaded', (event) => {
-    const focusableElements = document.querySelectorAll('.card, .video, .option, .banner-content, .logo, .menu a');
-    const cardsContainer = document.querySelector('.cards');
+    const focusableElementsSelector = '.card, .video, .option, .banner-content, .logo, .menu a'
+    let focusableElements = document.querySelectorAll(focusableElementsSelector);
+
+    function fetchData() {
+        fetch('/update_data')
+            .then(response => response.json())
+            .then(data => {
+                const cardsElement = document.querySelectorAll('.card');
+                const minLength = Math.min(cardsElement.length, data.cards.length);
+                          
+                if (cardsElement) {
+                    // 각 카드 업데이트 또는 새 카드 추가
+                    for (let i = 0; i < minLength; i++) {
+                        let cardElement = cardsElement[i];
+                        let card = data.cards[i];
+
+                        if (cardElement) {
+                            // 기존 카드 업데이트
+                            cardElement.dataset.url = `/product/${card.prod_id}`;
+                            cardElement.querySelector('.channel-number').innerText = card.ch_no;
+                            cardElement.querySelector('.channel-name').innerText = card.ch_nm;
+                            cardElement.querySelector('.product-image').src = card.productImgUrl;
+                            cardElement.querySelector('.product-name').innerText = card.bom_prod_nm;
+                            cardElement.querySelector('.product-price').innerText = `${card.price}원`;
+                        }
+                        else {
+                            // 새 카드 추가
+                            cardElement = document.createElement('div');
+                            cardElement.className = 'card';
+                            cardElement.id = `card-${card.prod_id}`;
+                            cardElement.setAttribute('tabindex', '0');
+                            cardElement.dataset.url = `/product/${card.prod_id}`;
+                            cardElement.innerHTML = `
+                                <div class='channel-number'>${card.ch_no}</div>
+                                <div class="channel-name">${card.ch_nm}</div>
+                                <img src="${card.productImgUrl}" alt="Product Image" class="product-image">
+                                <div class="product-details">
+                                    <div class="product-name">${card.bom_prod_nm}</div>
+                                    <div class="product-price">${card.price}원</div>
+                                </div>
+                            `;
+                            cardsContainer.appendChild(cardElement);
+                        }
+                    }
+
+                    // 새로 추가된 요소에 대해 포커스 및 클릭 이벤트 등록
+                    focusableElements = document.querySelectorAll(focusableElementsSelector);
+                    focusableElements.forEach(element => {
+                        element.addEventListener('keydown', (event) => {
+                            const direction = event.key;
+                            if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(direction)) {
+                                event.preventDefault();
+                                moveFocus(event.target, direction);
+                            }
+                        });
+
+                        element.addEventListener('keydown', function(event) {
+                            if (event.key === 'Enter') {
+                                const url = element.getAttribute('data-url');
+                                if (url) {
+                                    showOverlay(url);
+                                }
+                            }
+                        });
+
+                        // element.addEventListener('click', function() {
+                        //     const url = element.getAttribute('data-url');
+                        //     if (url) {
+                        //         showOverlay(url);
+                        //     }
+                        // });
+                    });
+                } 
+                else {
+                    console.error('.cards not found.');
+                }
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    }
+
+    // 초기 데이터 가져오기
+    fetchData();
+
+    // 10초마다 데이터 업데이트
+    setInterval(fetchData, 10000);
+    
     const nextButton = document.querySelector('.next');
     const prevButton = document.querySelector('.prev');
     let currentIndex = 0;
