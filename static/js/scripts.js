@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', (event) => {
-    const focusableElementsSelector = '.card, .video, .option, .banner-content, .logo, .menu a'
+    const focusableElementsSelector = '.header-element, .card, .video, .option, .banner-content, .logo, .menu a';
     let focusableElements = document.querySelectorAll(focusableElementsSelector);
     var updateFlag = true;
     const nextButton = document.querySelector('.next');
@@ -129,8 +129,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
             fetchData();
         }
         else {
-            // console.log('func update false updateFlag: ', updateFlag)s
             //pass
+            // console.log('func update false updateFlag: ', updateFlag)s
         }
     }
 
@@ -138,10 +138,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
     fetchCheckin();
 
     // 10초마다 pcicheckin 확인
-    setInterval(fetchCheckin, 10000);
+    setInterval(fetchCheckin, 5000);
 
     // 10초마다 pcicheckin 확인하여 카피라이팅, 추천상품군 update
-    setInterval(updateRecolist, 10000);
+    setInterval(updateRecolist, 5000);
     
     function moveFocus(currentElement, direction) {
         let focusableElementsInContext;
@@ -156,16 +156,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
         const currentIndex = Array.from(focusableElementsInContext).indexOf(currentElement);
         let targetIndex;
-
-        // 컬럼 계산
-        const sectionElements = document.querySelectorAll('section');
-        let columns = 1;
-        sectionElements.forEach(section => {
-            const items = section.querySelectorAll('.card, .video, .option').length;
-            if (items > 0) {
-                columns = Math.max(columns, Math.ceil(items / Math.floor(window.innerWidth / 300)));
-            }
-        });
+        let columns = calculateColumns(currentElement);
 
         // 방향키 입력
         switch (direction) {
@@ -188,6 +179,21 @@ document.addEventListener('DOMContentLoaded', (event) => {
         if (targetIndex >= 0 && targetIndex < focusableElementsInContext.length) {
             focusableElementsInContext[targetIndex].focus();
         }
+    }
+
+    // 주어진 요소의 부모 section 내에서 컬럼 수를 계산
+    function calculateColumns(element) {
+        const parentSection = element.closest('section');
+        if (!parentSection) return 1;
+
+        const items = parentSection.querySelectorAll('.card, .video, .option');
+        if (items.length > 0) {
+            const itemsArray = Array.from(items);
+            const itemWidth = itemsArray[0].offsetWidth;
+            const sectionWidth = parentSection.offsetWidth;
+            return Math.floor(sectionWidth / itemWidth);
+        }
+        return 1;
     }
 
     // 오버레이 표시

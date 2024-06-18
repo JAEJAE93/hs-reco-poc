@@ -110,9 +110,12 @@ def update_data():
         checkintime_list = []
         
         for item in pci_id_list:
-            checkin_time = item['d']
-            checkintime_list.append(int(checkin_time))
-        
+            try:
+                checkin_time = item['d']
+                checkintime_list.append(int(checkin_time))
+            except:
+                continue
+            
         max_idx = np.argmax(checkintime_list)
         pci_id = pci_id_list[max_idx]['p_id']
         
