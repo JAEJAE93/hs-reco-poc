@@ -23,12 +23,12 @@ document.addEventListener('DOMContentLoaded', (event) => {
             });
     }
 
-    // 카피라이팅 update -> fetchData랑 합치기???
-    function fetchCwData() {
+    // 추천리스트 update
+    function fetchData() {
         fetch('/update_data')
             .then(response => response.json())
             .then(data => {
-                // 카피라이팅 check
+                // copywriting
                 const recoCwElement = document.getElementById('reco_cw');
                 if (recoCwElement) {
                     // console.log('data.reco_cw: ', data.reco_cw);
@@ -37,17 +37,12 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 else {
                     console.error('#reco_cw not found.');
                 }
-            })
-    }
 
-    // 추천리스트 update
-    function fetchData() {
-        fetch('/update_data')
-            .then(response => response.json())
-            .then(data => {
+                // reco product list
                 const cardsElement = document.querySelectorAll('.card');
                 const minLength = Math.min(cardsElement.length, data.cards.length);
-                          
+                
+                // reco product 구역 확인
                 if (cardsElement) {
                     // 각 카드 업데이트 또는 새 카드 추가
                     for (let i = 0; i < minLength; i++) {
@@ -123,7 +118,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
     function updateRecolist(){
         if (pciCheckinFlag) {
             // console.log('func update true pciCheckinFlag: ', pciCheckinFlag)
-            fetchCwData();
             fetchData();
         }
         else {
@@ -137,11 +131,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
     // fetchCwData();
     // fetchData();
 
-    // 10초마다 pcicheckin 확인
-    setInterval(fetchCheckin, 10000);
+    // 5초마다 pcicheckin 확인
+    setInterval(fetchCheckin, 5000);
 
     // 10초마다 pcicheckin 확인하여 카피라이팅, 추천상품군 update
-    setInterval(updateRecolist, 10000);
+    setInterval(updateRecolist, 5000);
     // setInterval(fetchCwData, 10000);
     // setInterval(fetchData, 10000);
     
