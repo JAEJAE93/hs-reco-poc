@@ -35,6 +35,7 @@ def get_user_data(user_id):
 
 # Initial user data
 init_stb_id = stb_data['stb_id']
+global_cur_p_id = init_stb_id # 임시로 p_id 할당
 reco_cw, cards = get_user_data(init_stb_id)
 
 # main page
@@ -94,6 +95,8 @@ def get_pci_check_in(pci_data):
 # p_id 여기서 데이터를 불러와서 웹페이지
 @app.route('/update_data')
 def update_data():
+    global reco_cw, cards
+    global global_cur_p_id
     # pci3024로 pci data 조회
     pci_result = get_pci_check_in(pci3024_data)
     
@@ -101,6 +104,7 @@ def update_data():
     pci_id_list = pci_result['data']['pidlist']
     print('#' * 30)
     
+    # 체크인 id 존재
     if len(pci_id_list) > 0:
         # 체크인 시간이 가장 늦는 p_id 선택
         checkintime_list = []
@@ -111,17 +115,27 @@ def update_data():
         
         max_idx = np.argmax(checkintime_list)
         pci_id = pci_id_list[max_idx]['p_id']
+        
+        # 체크인 된 p_id와 저장한 p_id가 같음
+        # 업데이트 불필요
+        # if pci_id == global_cur_p_id:
+        #     return jsonify('Not update!!!')
+        
+        # 체크인 된 p_id와 저장한 p_id가 다름
+        # else:
+        # global_cur_p_id = pci_id
         reco_cw, cards = get_user_data(pci_id)
         print('pci_id: ', pci_id)
         print('#' * 30)
         
         return jsonify(reco_cw=reco_cw, cards=cards)
-    
+        
+    # 체크인 id 비존재
     else:
         print('Not checkin: ', pci_result)
         print('#' * 30)
         
-        return jsonify('Not checkin!!!')
+        return jsonify('Not update!!!')
 
 # def update_data():
 #     global cur_user_idx, reco_cw, cards

@@ -1,7 +1,14 @@
 document.addEventListener('DOMContentLoaded', (event) => {
     const focusableElementsSelector = '.card, .video, .option, .banner-content, .logo, .menu a'
     let focusableElements = document.querySelectorAll(focusableElementsSelector);
-    var pciCheckinFlag = true;
+    var updateFlag = true;
+    const nextButton = document.querySelector('.next');
+    const prevButton = document.querySelector('.prev');
+    
+    // overlay
+    const overlay = document.getElementById('overlay');
+    const overlayContent = document.getElementById('overlay-content');
+    let lastFocusedElement; // 콘텐츠 클릭 전의 포커스 저장
 
     // pci data check
     function fetchCheckin() {
@@ -9,13 +16,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
             .then(response => response.text())
             .then(data => {
                 // 특정 단어가 있는지 check 있으면 체크인 실패
-                if (data.includes('Not checkin!!!')) {
-                    // console.log('func Not checkin!!!')
-                    pciCheckinFlag = false;
+                if (data.includes('Not update!!!')) {
+                    console.log('func Not checkin!!!')
+                    updateFlag = false;
                 }
                 else{
-                    // console.log('func checkin!!!')
-                    pciCheckinFlag = true;
+                    console.log('func checkin!!!')
+                    updateFlag = true;
                 }
             })
             .catch(error => {
@@ -40,10 +47,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
                 // reco product list
                 const cardsElement = document.querySelectorAll('.card');
-                const minLength = Math.min(cardsElement.length, data.cards.length);
                 
                 // reco product 구역 확인
                 if (cardsElement) {
+                    const minLength = Math.min(cardsElement.length, data.cards.length);
                     // 각 카드 업데이트 또는 새 카드 추가
                     for (let i = 0; i < minLength; i++) {
                         let cardElement = cardsElement[i];
@@ -59,6 +66,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                             cardElement.querySelector('.product-price').innerText = `${card.price}원`;
                         }
                         else {
+                            console.log('새 카드 추가')
                             // 새 카드 추가
                             cardElement = document.createElement('div');
                             cardElement.className = 'card';
@@ -116,38 +124,25 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     // checkinflag에 따른 카피라이팅, 추천상품군 update
     function updateRecolist(){
-        if (pciCheckinFlag) {
-            // console.log('func update true pciCheckinFlag: ', pciCheckinFlag)
+        if (updateFlag) {
+            console.log('func update true updateFlag: ', updateFlag)
             fetchData();
         }
         else {
-            // console.log('func update false pciCheckinFlag: ', pciCheckinFlag)
+            // console.log('func update false updateFlag: ', updateFlag)s
             //pass
         }
     }
 
     // 초기 PCI 데이터 확인
     fetchCheckin();
-    // fetchCwData();
-    // fetchData();
 
-    // 5초마다 pcicheckin 확인
-    setInterval(fetchCheckin, 5000);
+    // 10초마다 pcicheckin 확인
+    setInterval(fetchCheckin, 10000);
 
     // 10초마다 pcicheckin 확인하여 카피라이팅, 추천상품군 update
-    setInterval(updateRecolist, 5000);
-    // setInterval(fetchCwData, 10000);
-    // setInterval(fetchData, 10000);
+    setInterval(updateRecolist, 10000);
     
-    const nextButton = document.querySelector('.next');
-    const prevButton = document.querySelector('.prev');
-    let currentIndex = 0;
-    
-    // overlay
-    const overlay = document.getElementById('overlay');
-    const overlayContent = document.getElementById('overlay-content');
-    let lastFocusedElement; // 콘텐츠 클릭 전의 포커스 저장
-
     function moveFocus(currentElement, direction) {
         let focusableElementsInContext;
         
