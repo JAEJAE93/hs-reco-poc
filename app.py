@@ -9,14 +9,14 @@ app = Flask(__name__)
 # pci3024 data 호출
 with open("data/pci3024.txt", "r") as f:
     pci3024_data = json.load(f)
+    
+# stb data 호출
+with open("data/stb_id.txt", "r") as f:
+    stb_data = json.load(f)
 
 # read_csv string으로 불러오기
 dict_dtype = {'ch_no' : str}
 reco_container_df = pd.read_csv('data/merge_df.dat', dtype=dict_dtype)
-
-# Initial user setup
-cur_user_idx = 1
-users = reco_container_df['p_id'].unique()
 
 # p_id로 데이터 호출
 def get_user_data(user_id):
@@ -28,8 +28,14 @@ def get_user_data(user_id):
     reco_cw = user_df['카피라이팅'].tolist()[0] if '카피라이팅' in user_df.columns else '고객님께서 최근에 관심 있으시던 상품들이에요.'
     return reco_cw, cards
 
+# Initial user setup
+# cur_user_idx = 1
+# users = reco_container_df['p_id'].unique()
+# reco_cw, cards = get_user_data(users[cur_user_idx])
+
 # Initial user data
-reco_cw, cards = get_user_data(users[cur_user_idx])
+init_stb_id = stb_data['stb_id']
+reco_cw, cards = get_user_data(init_stb_id)
 
 # main page
 @app.route('/')
