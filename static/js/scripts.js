@@ -1,7 +1,46 @@
 document.addEventListener('DOMContentLoaded', (event) => {
     const focusableElementsSelector = '.card, .video, .option, .banner-content, .logo, .menu a'
     let focusableElements = document.querySelectorAll(focusableElementsSelector);
+    var pciCheckinFlag = true;
 
+    // pci data check
+    function fetchCheckin() {
+        fetch('/update_data')
+            .then(response => response.text())
+            .then(data => {
+                // 특정 단어가 있는지 check 있으면 체크인 실패
+                if (data.includes('Not checkin!!!')) {
+                    // console.log('func Not checkin!!!')
+                    pciCheckinFlag = false;
+                }
+                else{
+                    // console.log('func checkin!!!')
+                    pciCheckinFlag = true;
+                }
+            })
+            .catch(error => {
+                console.error('Error fetch checkin:', error);
+            });
+    }
+
+    // 카피라이팅 update -> fetchData랑 합치기???
+    function fetchCwData() {
+        fetch('/update_data')
+            .then(response => response.json())
+            .then(data => {
+                // 카피라이팅 check
+                const recoCwElement = document.getElementById('reco_cw');
+                if (recoCwElement) {
+                    // console.log('data.reco_cw: ', data.reco_cw);
+                    recoCwElement.innerText = data.reco_cw;
+                }
+                else {
+                    console.error('#reco_cw not found.');
+                }
+            })
+    }
+
+    // 추천리스트 update
     function fetchData() {
         fetch('/update_data')
             .then(response => response.json())
@@ -71,21 +110,40 @@ document.addEventListener('DOMContentLoaded', (event) => {
                         //     }
                         // });
                     });
-                } 
+                }
                 else {
+
                     console.error('.cards not found.');
                 }
             })
             .catch(error => console.error('Error fetching data:', error));
     }
 
-    // 초기 데이터 가져오기
-    fetchData();
+    // checkinflag에 따른 카피라이팅, 추천상품군 update
+    function updateRecolist(){
+        if (pciCheckinFlag) {
+            // console.log('func update true pciCheckinFlag: ', pciCheckinFlag)
+            fetchCwData();
+            fetchData();
+        }
+        else {
+            // console.log('func update false pciCheckinFlag: ', pciCheckinFlag)
+            //pass
+        }
+    }
 
-    // 10초마다 데이터 업데이트
-    // pci가 체크인 됐을 때, fetchData 다시 불러오는 함수를 작성해야 됨.
-    
-    setInterval(fetchData, 10000);
+    // 초기 PCI 데이터 확인
+    fetchCheckin();
+    // fetchCwData();
+    // fetchData();
+
+    // 10초마다 pcicheckin 확인
+    setInterval(fetchCheckin, 10000);
+
+    // 10초마다 pcicheckin 확인하여 카피라이팅, 추천상품군 update
+    setInterval(updateRecolist, 10000);
+    // setInterval(fetchCwData, 10000);
+    // setInterval(fetchData, 10000);
     
     const nextButton = document.querySelector('.next');
     const prevButton = document.querySelector('.prev');
